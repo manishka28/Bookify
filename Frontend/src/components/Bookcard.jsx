@@ -1,11 +1,32 @@
-import React from 'react';
+import React, { useState } from 'react';
+import { useCart } from '../context/cart';
 
 export default function Bookcard({ item }) {
   let amount = 'FREE';
   let view = 'READ';
 
+  const [cart, setCart] = useCart();
+  const [message, setMessage] = useState('');
+
+  const handleAddToCart = (item) => {
+    // Add item to cart state
+    const updatedCart = [...cart, item];
+    setCart(updatedCart);
+
+    // Update local storage
+    localStorage.setItem('cart', JSON.stringify(updatedCart));
+
+    // Display message
+    setMessage('Item added to cart');
+
+    // Hide the message after 3 seconds
+    setTimeout(() => {
+      setMessage('');
+    }, 3000);
+  };
+
   if (item.saleInfo.saleability === 'FOR_SALE') {
-    let temp = item.saleInfo.listPrice.amount;
+    const temp = item.saleInfo.listPrice.amount;
     if (temp === 0) {
       amount = 'FREE';
     } else {
@@ -18,7 +39,7 @@ export default function Bookcard({ item }) {
   }
 
   return (
-    <div className="w-70 h-96 m-4">
+    <div className="w-50 h-50 md:w-70 md:h-96 m-4">
       <div className="card shadow-xl h-full flex flex-col">
         <figure className="flex-grow-0">
           <img className="w-full h-48 object-cover" src={item.volumeInfo.imageLinks?.thumbnail || 'default-thumbnail.jpg'} alt={item.volumeInfo.title} />
@@ -36,10 +57,24 @@ export default function Bookcard({ item }) {
             <div className="text-lg font-semibold mb-2">{amount}</div>
             <div className="flex flex-col gap-2">
               {(view === 'PREVIEW' || view === 'READ') && (
-                <a href={item.accessInfo.webReaderLink} target="_blank" rel="noopener noreferrer" className="w-full text-center bg-transparent btn btn-sm border border-purple-600 text-purple-600 hover:bg-purple-500 hover:text-white dark:text-white dark:hover:text-black">{view}</a>
+                <a href={item.accessInfo.webReaderLink} target="_blank" rel="noopener noreferrer" className="w-full text-center bg-transparent btn btn-sm border border-purple-600 text-purple-600 hover:bg-purple-500 hover:text-white dark:text-white dark:hover:text-black">
+                  {view}
+                </a>
               )}
               {(view === 'PREVIEW' || view === 'READ') && (
-                <a href={item.saleInfo.buyLink} target="_blank" rel="noopener noreferrer" className="w-full text-center bg-transparent btn btn-sm border border-purple-600 text-purple-600 hover:bg-purple-500 hover:text-white dark:text-white dark:hover:text-black">Buy Now</a>
+                <>
+                  <button 
+                    onClick={() => handleAddToCart(item)}
+                    className="w-full text-center bg-transparent btn btn-sm border border-purple-600 text-purple-600 hover:bg-purple-500 hover:text-white dark:text-white dark:hover:text-black"
+                  >
+                    ADD TO CART
+                  </button>
+                  {message && (
+                    <div className="mt-2 text-green-600">
+                      {message}
+                    </div>
+                  )}
+                </>
               )}
             </div>
           </div>

@@ -17,7 +17,7 @@ const Hero = () => {
           <div className="absolute flex inset-0 bg-black opacity-20"></div>
           <div className="absolute mt-48 inset-0 flex-col items-center justify-center text-center text-white">
             <div>
-              <h1 className=" font-extrabold text-6xl mb-4">Welcome to <span className="text-purple-500 text-7xl">Bookify</span></h1>
+              <h1 className=" font-extrabold text-5xl md:text-6xl mb-4">Welcome to <span className="text-purple-500  text-6xl md:text-7xl">Bookify</span></h1>
               <h1 className="text-3xl">
               Dive into Adventure, Mystery, and Imagination
               </h1>

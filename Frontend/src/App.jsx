@@ -4,6 +4,8 @@ import {Routes,Route} from "react-router-dom"
 import Footer from './components/Footer'
 import Library from './components/Library'
 import Navigation from './components/Navigation'
+import Purchases from './pages/Purchases'
+import CartPage from './pages/CartPage'
 
 
 export default function App() {
@@ -15,6 +17,8 @@ export default function App() {
       <Route path='/' element={<Home/>}/>
       <Route path='/library' element={<Library/>}/>
       <Route path="/library/:name" Component={Library}element={<Library/>}/>
+      <Route path="/purchases" Component={Purchases} element={<Purchases/>}/>
+      <Route path="/cart" Component={CartPage} element={<CartPage/>}/>
     </Routes>
     <Footer/>
     </div>

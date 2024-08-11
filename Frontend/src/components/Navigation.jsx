@@ -5,9 +5,15 @@ import SignUp from './SignUp';
 import { useAuth } from '../context/UserContextProvider';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faShoppingCart } from '@fortawesome/free-solid-svg-icons';
-import { useCart } from '../context/cart';
+import { useCart } from '../context/CartProvider';
+// import { useCart } from '../context/cart';
+
+
 function Navigation() {
   const [user, setUser] = useAuth();
+
+  // console.log(`USER: ${user._id}`);
+  
   const [logoutDropdownOpen, setLogoutDropdownOpen] = useState(false);
   const [catalogDropdownOpen, setCatalogDropdownOpen] = useState(false);
   const [mobileCatalogDropdownOpen, setMobileCatalogDropdownOpen] = useState(false);
@@ -16,8 +22,38 @@ function Navigation() {
   const location = useLocation();
   const element = document.documentElement;
 
-  const [cart]=useCart();
+  // const [cart]=useCart();
+
   const dropdownRef = useRef(null);
+  
+
+  // Cart SYstem 
+  const { cart, setCart, loading, error } = useCart();
+
+  useEffect(() => {
+    if (user && user._id) {
+      console.log('Fetching cart items for user:', user);
+      // The CartProvider will handle fetching the cart data
+    } else {
+      console.log('No user is logged in. Skipping cart fetch.');
+    }
+  }, [user, setCart]);
+
+  const saveCartItems = (updatedCart) => {
+    console.log('Saving updated cart:', updatedCart);
+    setCart(updatedCart); // Update cart in CartProvider
+  };
+
+  // useEffect(() => {
+  //   // Fetch the cart from local storage
+  //   const savedCart = localStorage.getItem('cart');
+  //   if (savedCart) {
+  //     setCart(JSON.parse(savedCart));
+  //   }
+  // }, []);
+
+
+
 
   const fictionCategories = [
     'adventure', 'classics', 'crime', 'fairy-tales-fables-and-folk-tales', 'fantasy', 'historical-fiction',

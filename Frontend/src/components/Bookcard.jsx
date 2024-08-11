@@ -1,28 +1,31 @@
 import React, { useState } from 'react';
-import { useCart } from '../context/cart';
+import { useCart } from '../context/CartProvider';
+
 
 export default function Bookcard({ item }) {
   let amount = 'FREE';
   let view = 'READ';
 
-  const [cart, setCart] = useCart();
+  const { cart, addItemToCart } = useCart(); // Destructure addItemToCart from useCart
+  // console.log(cart);
+  
   const [message, setMessage] = useState('');
 
-  const handleAddToCart = (item) => {
-    // Add item to cart state
-    const updatedCart = [...cart, item];
-    setCart(updatedCart);
+  const handleAddToCart = async (item) => {
+    try {
+      await addItemToCart(item); // Add item using context method
 
-    // Update local storage
-    localStorage.setItem('cart', JSON.stringify(updatedCart));
+      // Display message
+      setMessage('Item added to cart');
 
-    // Display message
-    setMessage('Item added to cart');
-
-    // Hide the message after 3 seconds
-    setTimeout(() => {
-      setMessage('');
-    }, 3000);
+      // Hide the message after 3 seconds
+      setTimeout(() => {
+        setMessage('');
+      }, 3000);
+    } catch (err) {
+      console.error('Failed to add item to cart:', err);
+      setMessage('Error adding item to cart');
+    }
   };
 
   if (item.saleInfo.saleability === 'FOR_SALE') {

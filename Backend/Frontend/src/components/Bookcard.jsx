@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { useCart } from '../context/CartProvider';
+import { useAuth } from '../context/UserContextProvider';
 
 
 export default function Bookcard({ item }) {
@@ -8,6 +9,7 @@ export default function Bookcard({ item }) {
 
   const { cart, addItemToCart } = useCart(); // Destructure addItemToCart from useCart
   // console.log(cart);
+  const [user, setUser] = useAuth();
   
   const [message, setMessage] = useState('');
 
@@ -65,20 +67,32 @@ export default function Bookcard({ item }) {
                 </a>
               )}
               {(view === 'PREVIEW' || view === 'READ') && (
-                <>
-                  <button 
-                    onClick={() => handleAddToCart(item)}
-                    className="w-full text-center bg-transparent btn btn-sm border border-purple-600 text-purple-600 hover:bg-purple-500 hover:text-white dark:text-white dark:hover:text-black"
-                  >
-                    ADD TO CART
-                  </button>
-                  {message && (
-                    <div className="mt-2 text-green-600">
-                      {message}
-                    </div>
-                  )}
-                </>
-              )}
+  <div>
+    {user && user.fullname ? (
+      <>
+        <button 
+          onClick={() => handleAddToCart(item)}
+          className="w-full text-center bg-transparent btn btn-sm border border-purple-600 text-purple-600 hover:bg-purple-500 hover:text-white dark:text-white dark:hover:text-black"
+        >
+          ADD TO CART
+        </button>
+        {message && (
+          <div className="mt-2 text-green-600">
+            {message}
+          </div>
+        )}
+      </>
+    ) : (
+      <button 
+        onClick={() => document.getElementById("my_modal_3").showModal()}
+        className="w-full text-center bg-transparent btn btn-sm border border-purple-600 text-purple-600 hover:bg-purple-500 hover:text-white dark:text-white dark:hover:text-black"
+      >
+        ADD TO CART
+      </button>
+    )}
+  </div>
+)}
+
             </div>
           </div>
         </div>

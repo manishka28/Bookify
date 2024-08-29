@@ -48,7 +48,7 @@ function CartPage() {
   }
   if (error) {
     console.error('Error loading cart:', error);
-    return <div>Error loading cart: {error.message}</div>;
+    return <div>Error loading cart !!</div>;
   }
 
   return (

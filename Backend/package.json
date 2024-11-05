@@ -6,8 +6,8 @@
   "type": "module",
   "scripts": {
     "start": "node index.js",
-    "heroku-postbuild": "NPM_CONFIG_PRODUCTION =flase npm install --prefix frontend && npm run build --prefix frontend",
-    "dev": "nodemon index.js"
+    "heroku-postbuild":"NPM_CONFIG_PRODUCTION =flase npm install --prefix frontend && npm run build --prefix frontend",
+    "dev":"nodemon index.js"
   },
   "repository": {
     "type": "git",

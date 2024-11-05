@@ -27,15 +27,15 @@ mongoose.connect(URI, {
 app.use('/user', userRoute);
 app.use('/cart', cartRoute);
 
-// Deployment
-if (process.env.NODE_ENV === 'production') {
-  const __dirname = path.resolve();
-  app.use(express.static(path.join(__dirname, 'Frontend', 'dist')));
+// // Deployment
+// if (process.env.NODE_ENV === 'production') {
+//   const __dirname = path.resolve();
+//   app.use(express.static(path.join(__dirname, 'Frontend', 'dist')));
   
-  app.get('*', (req, res) => {
-    res.sendFile(path.resolve(__dirname, 'Frontend', 'dist', 'index.html'));
-  });
-}
+//   app.get('*', (req, res) => {
+//     res.sendFile(path.resolve(__dirname, 'Frontend', 'dist', 'index.html'));
+//   });
+// }
 
 app.listen(port, () => {
   console.log(`Server is listening on port ${port}`);

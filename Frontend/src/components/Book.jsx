@@ -15,7 +15,7 @@ export default function Book() {
       .then(res => setData(res.data.items || []))
       .catch(err => console.log(err));
   };
-
+//empty dependency-->called once
   useEffect(() => {
     handleButtonClick('technology'); // Call handleButtonClick with 'technology' on component mount
   }, []);

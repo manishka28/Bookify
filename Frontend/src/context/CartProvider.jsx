@@ -21,7 +21,7 @@ const CartProvider = ({ children }) => {
 
       try {
         console.log('Fetching cart for userId:', userId);
-        const response = await axios.get(`http://localhost:4001/cart/${userId._id}`);
+        const response = await axios.get(`http://localhost:4000/cart/${userId._id}`);
         console.log('Cart data fetched:', response.data);
         setCart(response.data);
       } catch (err) {
@@ -37,7 +37,7 @@ const CartProvider = ({ children }) => {
 
   const addItemToCart = async (item) => {
     try {
-      const response = await axios.post(`http://localhost:4001/cart`, {
+      const response = await axios.post(`http://localhost:4000/cart`, {
         userId: userId._id,
         ...item
       });
@@ -51,7 +51,7 @@ const CartProvider = ({ children }) => {
 
   const removeItemFromCart = async (itemId) => {
     try {
-      const response = await axios.delete(`http://localhost:4001/cart/${userId._id}/${itemId}`);
+      const response = await axios.delete(`http://localhost:4000/cart/${userId._id}/${itemId}`);
       console.log('Item removed from cart:', response.data);
       setCart((prevCart) => prevCart.filter(item => item._id !== itemId));
     } catch (err) {
@@ -62,7 +62,7 @@ const CartProvider = ({ children }) => {
 
   const updateCartItem = async (itemId, updates) => {
     try {
-      const response = await axios.put(`http://localhost:4001/cart/${userId._id}/${itemId}`, updates);
+      const response = await axios.put(`http://localhost:4000/cart/${userId._id}/${itemId}`, updates);
       console.log('Cart item updated:', response.data);
       setCart((prevCart) => prevCart.map(item => item._id === itemId ? response.data : item));
     } catch (err) {

@@ -36,6 +36,7 @@ function Navigation() {
     // Implement logout logic here, e.g., clear user session
     setUser(null); // Example assuming setUser updates the user state
     // Additional logic to clear session storage, tokens, etc.
+    localStorage.removeItem('Users'); 
     setLogoutDropdownOpen(false); // Close logout dropdown after logout
   };
 

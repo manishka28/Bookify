@@ -144,6 +144,7 @@ function Navigation() {
   };
   const handleLogout = () => {
     setUser(null);
+    localStorage.removeItem('Users'); 
     setLogoutDropdownOpen(false);
     // Additional logic to clear session storage, tokens, etc.
   };

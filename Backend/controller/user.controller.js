@@ -3,7 +3,9 @@ import bcryptjs from "bcryptjs";
 
 export const signup = async (req, res) => {
   try {
-    const { fullname, email, password } = req.body;
+    // console.log(req.body);
+    
+    const { fullname, email, password,phone } = req.body;
     const user = await User.findOne({ email });
     if (user) {
       return res.status(400).json({ message: "User Already Exist" });
@@ -12,14 +14,15 @@ export const signup = async (req, res) => {
     const createdUser = new User({
       fullname: fullname,
       email: email,
-      password: hashPassword
+      password: hashPassword,
+      phone:phone
     });
 
     await createdUser.save();
     res.status(201).json({ message: "User Created Successfully" });
 
   } catch (error) {
-    console.log("Error: " + error.message);
+    console.log("Error: " + error);
     res.status(500).json({ message: "Internal Server Error!" });
   }
 };

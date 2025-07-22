@@ -54,6 +54,10 @@ const cartSchema = new mongoose.Schema({
       }
     },
   },
+  accessInfo: {
+  webReaderLink: { type: String }
+}
+
 });
 
 // Indexing userId for performance optimization

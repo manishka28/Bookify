@@ -4,7 +4,7 @@ import LogIn from './LogIn';
 import SignUp from './SignUp';
 import { useAuth } from '../context/UserContextProvider';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faShoppingCart } from '@fortawesome/free-solid-svg-icons';
+import { faShoppingCart,faBookOpen ,faBookBookmark} from '@fortawesome/free-solid-svg-icons';
 import { useCart } from '../context/CartProvider';
 // import { useCart } from '../context/cart';
 
@@ -144,6 +144,7 @@ function Navigation() {
   };
   const handleLogout = () => {
     setUser(null);
+    setCart([]);
     localStorage.removeItem('Users'); 
     setLogoutDropdownOpen(false);
     // Additional logic to clear session storage, tokens, etc.
@@ -361,7 +362,7 @@ ul className="list-none grid grid-cols-2 lg:grid-cols-1">
       {user && user.fullname ? (
         <div className="relative">
         <NavLink exact to="/cart" className="relative">
-          <FontAwesomeIcon className='mt-4' icon={faShoppingCart} size="xl" />
+          <FontAwesomeIcon className='mt-4' icon={faBookOpen} size="xl" />
           {cart.length > 0 && (
             <span className="absolute top-0 right-0 inline-flex items-center justify-center px-2 py-1 text-xs font-bold leading-none text-red-100 transform translate-x-1/2 -translate-y-1/2 bg-red-600 rounded-full">
               {cart.length}
@@ -374,7 +375,7 @@ ul className="list-none grid grid-cols-2 lg:grid-cols-1">
           onClick={() => document.getElementById("my_modal_3").showModal()}
           className="cursor-pointer dark:text-white"
         >
-          <FontAwesomeIcon className='mt-2' icon={faShoppingCart} size="xl" />
+          <FontAwesomeIcon className='mt-2' icon={faBookOpen} size="xl" />
         </span>
       )}
     </div>

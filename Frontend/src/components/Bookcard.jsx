@@ -7,28 +7,61 @@ export default function Bookcard({ item }) {
   let amount = 'FREE';
   let view = 'READ';
 
-  const { cart, addItemToCart } = useCart(); // Destructure addItemToCart from useCart
-  // console.log(cart);
+  const { cart, addItemToCart } = useCart();
   const [user, setUser] = useAuth();
+  const [isError,setIsError]=useState(false);
   
   const [message, setMessage] = useState('');
-
-  const handleAddToCart = async (item) => {
-    try {
-      await addItemToCart(item); // Add item using context method
-
-      // Display message
-      setMessage('Item added to cart');
-
-      // Hide the message after 3 seconds
-      setTimeout(() => {
-        setMessage('');
-      }, 3000);
-    } catch (err) {
-      console.error('Failed to add item to cart:', err);
-      setMessage('Error adding item to cart');
-    }
+function sanitizeBookForCart(item, userId) {
+  return {
+    userId,
+    id: item.id,
+    volumeInfo: {
+      title: item.volumeInfo?.title || 'No Title',
+      authors: item.volumeInfo?.authors || [],
+      publisher: item.volumeInfo?.publisher || '',
+      publishedDate: item.volumeInfo?.publishedDate ? new Date(item.volumeInfo.publishedDate) : null,
+      description: item.volumeInfo?.description || '',
+      imageLinks: {
+        smallThumbnail: item.volumeInfo?.imageLinks?.smallThumbnail || '',
+        thumbnail: item.volumeInfo?.imageLinks?.thumbnail || '',
+      },
+    },
+    saleInfo: {
+      saleability: ['FOR_SALE', 'NOT_FOR_SALE'].includes(item.saleInfo?.saleability)
+        ? item.saleInfo.saleability
+        : 'NOT_FOR_SALE',
+      listPrice: {
+        amount: item.saleInfo?.listPrice?.amount ?? 0,
+        currencyCode: item.saleInfo?.listPrice?.currencyCode || 'INR',
+      }
+    },
+    accessInfo: {
+    webReaderLink: item.accessInfo?.webReaderLink || ''
+  }
   };
+}
+
+ const handleAddToCart = async (item) => {
+  try {
+  const sanitizedItem = sanitizeBookForCart(item, user._id);
+    await addItemToCart(sanitizedItem);
+
+   
+    setMessage('Item added to cart');
+  } catch (err) {
+    setIsError(true);
+    console.log(err);
+    
+    setMessage(err?.response?.data?.message || 'Error adding item to cart');
+  }
+
+  setTimeout(() => {
+    setMessage('');
+    setIsError(false);
+  }, 3000);
+};
+
 
   if (item.saleInfo.saleability === 'FOR_SALE') {
     const temp = item.saleInfo.listPrice.amount;
@@ -74,10 +107,10 @@ export default function Bookcard({ item }) {
           onClick={() => handleAddToCart(item)}
           className="w-full text-center bg-transparent btn btn-sm border border-purple-600 text-purple-600 hover:bg-purple-500 hover:text-white dark:text-white dark:hover:text-black"
         >
-          ADD TO CART
+          ADD TO LIST
         </button>
         {message && (
-          <div className="mt-2 text-green-600">
+          <div className="mt-2 "  style={{ color: isError ? 'red' : 'green' }}>
             {message}
           </div>
         )}
@@ -87,7 +120,7 @@ export default function Bookcard({ item }) {
         onClick={() => document.getElementById("my_modal_3").showModal()}
         className="w-full text-center bg-transparent btn btn-sm border border-purple-600 text-purple-600 hover:bg-purple-500 hover:text-white dark:text-white dark:hover:text-black"
       >
-        ADD TO CART
+        ADD TO LIST
       </button>
     )}
   </div>

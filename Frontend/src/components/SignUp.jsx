@@ -8,7 +8,8 @@ function SignUp() {
     fullname: '',
     email: '',
     password: '',
-    confirmPassword: ''
+    confirmPassword: '',
+    phone:''
   });
 
   const [errorMessage, setErrorMessage] = useState('');
@@ -20,7 +21,8 @@ function SignUp() {
       fullname: '',
       email: '',
       password: '',
-      confirmPassword: ''
+      confirmPassword: '',
+      phone:''
     });
     setErrorMessage('');
   };
@@ -34,7 +36,8 @@ function SignUp() {
       fullname: '',
       email: '',
       password: '',
-      confirmPassword: ''
+      confirmPassword: '',
+      phone:''
     });
   };
 
@@ -59,6 +62,7 @@ function SignUp() {
           fullname: formData.fullname,
           email: formData.email,
           password: formData.password,
+          phone:formData.phone
         }),
       });
       const result = await response.json();
@@ -68,7 +72,8 @@ function SignUp() {
           fullname: '',
           email: '',
           password: '',
-          confirmPassword: ''
+          confirmPassword: '',
+          phone:''
         });
         if (formRef.current) {
           formRef.current.reset();
@@ -105,6 +110,8 @@ function SignUp() {
               <input name="fullname" value={formData.fullname} onChange={handleChange} className="bg-transparent w-80 px-3 h-10 border border-black dark:border-white rounded-md outline-none" type="text" placeholder='Your Name' required />
               <div className='mt-5 mb-2'>Email</div>
               <input name="email" value={formData.email} onChange={handleChange} className="bg-transparent w-80 px-3 h-10 border border-black dark:border-white rounded-md outline-none" type="email" placeholder='abc@email.com'required />
+              <div className='mt-5 mb-2'>Phone</div>
+              <input name="phone" value={formData.phone} onChange={handleChange} className="bg-transparent w-80 px-3 h-10 border border-black dark:border-white rounded-md outline-none" type="text" placeholder='123456789'required />
               <div className='mt-5 mb-2'>Create Password</div>
               <input name="password" value={formData.password} onChange={handleChange} className="bg-transparent w-80 h-10 px-3 border border-black dark:border-white rounded-md outline-none" type="password" required />
               <div className='mt-5 mb-2'>Confirm Password</div>

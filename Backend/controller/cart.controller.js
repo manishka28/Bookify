@@ -4,6 +4,8 @@ import CartItem from '../modal/cart.model.js'
 export const getCartItems = async (req, res) => {
   try {
     const { userId } = req.params;
+    // console.log("user",userId);
+    
     
     // Validate userId
     if (!userId) {
@@ -21,10 +23,10 @@ export const getCartItems = async (req, res) => {
 // Add an item to the cart
 export const addCartItem = async (req, res) => {
   try {
-    const { userId, id, volumeInfo, saleInfo } = req.body;
+    const { userId, id, volumeInfo, saleInfo,accessInfo } = req.body;
 
     // Validate request body
-    if (!userId || !id || !volumeInfo || !saleInfo) {
+    if (!userId || !id || !volumeInfo || !saleInfo || !accessInfo) {
       return res.status(400).json({ message: 'Missing required fields' });
     }
 
@@ -39,6 +41,7 @@ export const addCartItem = async (req, res) => {
       id,
       volumeInfo,
       saleInfo,
+      accessInfo,
     });
 
     await cartItem.save();
@@ -54,12 +57,12 @@ export const removeCartItem = async (req, res) => {
   try {
     const { userId, id } = req.params;
 
-    // Validate userId and id
     if (!userId || !id) {
       return res.status(400).json({ message: 'User ID and Item ID are required' });
     }
 
-    const deletedItem = await CartItem.findOneAndDelete({ userId, id });
+    const deletedItem = await CartItem.findOneAndDelete({ userId, _id: id });
+
     if (!deletedItem) {
       return res.status(404).json({ message: 'Item not found in cart' });
     }
@@ -71,24 +74,23 @@ export const removeCartItem = async (req, res) => {
   }
 };
 
+
 // Update a cart item (e.g., change quantity or other fields)
 export const updateCartItem = async (req, res) => {
   try {
     const { userId, id } = req.params;
     const updates = req.body;
 
-    // Validate userId and id
     if (!userId || !id) {
       return res.status(400).json({ message: 'User ID and Item ID are required' });
     }
 
-    // Validate updates
     if (!updates || Object.keys(updates).length === 0) {
       return res.status(400).json({ message: 'No update data provided' });
     }
 
     const updatedItem = await CartItem.findOneAndUpdate(
-      { userId, id },
+      { userId, _id: id },
       updates,
       { new: true }
     );

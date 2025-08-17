@@ -5,13 +5,17 @@ import cors from 'cors';
 import userRoute from './route/user.route.js';
 import cartRoute from './route/cart.route.js';
 import path from 'path';
-
+import cookieParser from 'cookie-parser'
 // Initialize environment variables
 dotenv.config();
 
 const app = express();
 app.use(express.json());
-app.use(cors());
+app.use(cors({
+  origin: "http://localhost:5173", // your frontend URL
+  credentials: true                // allow cookies to be sent
+}));
+app.use(cookieParser());
 
 const port = process.env.PORT || 3000;
 const URI = process.env.MongoDBURI;

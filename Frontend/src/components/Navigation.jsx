@@ -6,11 +6,15 @@ import { useAuth } from '../context/UserContextProvider';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faShoppingCart,faBookOpen ,faBookBookmark} from '@fortawesome/free-solid-svg-icons';
 import { useCart } from '../context/CartProvider';
+import axios from 'axios';
 // import { useCart } from '../context/cart';
 
 
 function Navigation() {
   const [user, setUser] = useAuth();
+  
+  // console.log(accessToken);
+  
 
   // console.log(`USER: ${user._id}`);
   
@@ -142,13 +146,28 @@ function Navigation() {
     setMobileCatalogDropdownOpen(prevState => !prevState);
     console.log(`Toggling mobile dropdown state to ${!mobileCatalogDropdownOpen}`);
   };
-  const handleLogout = () => {
+  const handleLogout = async () => {
+  try {
+    // Call backend logout route
+    const accessToken = localStorage.getItem("accessToken");
+    await axios.post("http://localhost:4000/user/logout", {}, { 
+      withCredentials: true ,// important to clear refreshToken cookie
+      headers: {
+          Authorization: `Bearer ${accessToken}`, // 👈 send token
+        },
+    });
+    // Clear local state
     setUser(null);
-    setCart([]);
-    localStorage.removeItem('Users'); 
+    setCart([]); 
+    localStorage.removeItem("Users"); 
+    localStorage.removeItem("accessToken"); // clear accessToken too
     setLogoutDropdownOpen(false);
-    // Additional logic to clear session storage, tokens, etc.
-  };
+
+    console.log("User logged out successfully.");
+  } catch (err) {
+    console.error("Logout failed:", err);
+  }
+};
 
   const navItems = (
     <>

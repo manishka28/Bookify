@@ -36,6 +36,7 @@ function LogIn() {
         headers: {
           'Content-Type': 'application/json',
         },
+        credentials: 'include',
         body: JSON.stringify({
           email: formData.email,
           password: formData.password,
@@ -61,6 +62,8 @@ function LogIn() {
         console.log('Login successful:', result.message || 'Logged in successfully!');
         closeLogInModal();
         localStorage.setItem("Users", JSON.stringify(result.user));
+        localStorage.setItem("accessToken", result.accessToken);
+
         setTimeout(() => {
           window.location.reload();
         }, 1000);

@@ -59,33 +59,34 @@ function Navigation() {
 
 
 
-  const fictionCategories = [
-    'adventure', 'classics', 'crime', 'fairy-tales-fables-and-folk-tales', 'fantasy', 'historical-fiction',
-    'horror', 'humour-and-satire', 'literary-fiction', 'mystery', 'poetry', 'plays', 'romance',
-    'science-fiction', 'short-stories', 'thrillers', 'war', 'womens-fiction', 'young-adult', 'contemproary'
-  ];
+ const fictionCategories = [ 
+  'adventure', 'classics', 'crime', 'fairy-tales-fables-and-folk-tales', 'fantasy', 'historical-fiction',
+  'horror', 'humour-and-satire', 'literary-fiction', 'mystery', 'poetry', 'plays', 'romance',
+  'science-fiction', 'short-stories', 'thrillers', 'war', 'womens-fiction', 'young-adult', 'contemporary'
+];
 
-  const nonFictionCategories = [
-    'biography', 'essay', 'journalism', 'memoir', 'self-help', 'true-crime', 'business-management',
-    'health-fitness', 'sprituality', 'philosophy', 'history', 'travel-holiday', 'science-nature',
-    'sports', 'dictionary-reference', 'stock-market', 'technology'
-  ];
+const nonFictionCategories = [
+  'biography', 'essay', 'journalism', 'memoir', 'self-help', 'true-crime', 'business-management',
+  'health-fitness', 'sprituality', 'philosophy', 'history', 'travel-holiday', 'science-nature',
+  'sports', 'dictionary-reference', 'stock-market', 'technology'
+];
 
-  const comicCategories = ['indian-comics', 'american-comics', 'manga'];
+const comicCategories = ['indian-comics', 'american-comics', 'manga'];
 
-  const fictionLabels = [
-    'Adventure stories', 'Classics', 'Crime', 'Fairy tales,fables, and folk tales', 'Fantasy', 'Historical fiction',
-    'Horror', 'Humour and satire', 'Literary fiction', 'Mystery', 'Poetry', 'Plays', 'Romance',
-    'Science fiction', 'Short stories', 'Thrillers', 'War', 'Women’s fiction', 'Young adult', 'Contemproary'
-  ];
+const fictionLabels = [
+  'Adventure stories', 'Classics', 'Crime', 'Fairy tales, fables, and folk tales', 'Fantasy', 'Historical fiction',
+  'Horror', 'Humour and satire', 'Literary fiction', 'Mystery', 'Poetry', 'Plays', 'Romance',
+  'Science fiction', 'Short stories', 'Thrillers', 'War', 'Women’s fiction', 'Young adult', 'Contemporary'
+];
 
-  const nonFictionLabels = [
-    'Biography', 'Essay', 'Journalism', 'Memoir', 'Self-help', 'True crime', 'Business & Management',
-    'Health & Fitness', 'Sprituality', 'Philosophy', 'History', 'Travel & Holiday', 'Science & Nature',
-    'Sports', 'Dictionary & Reference', 'Stock Market', 'Technology'
-  ];
+const nonFictionLabels = [
+  'Biography', 'Essay', 'Journalism', 'Memoir', 'Self-help', 'True crime', 'Business & Management',
+  'Health & Fitness', 'Sprituality', 'Philosophy', 'History', 'Travel & Holiday', 'Science & Nature',
+  'Sports', 'Dictionary & Reference', 'Stock Market', 'Technology'
+];
 
-  const comicLabels = ['Indian Comics', 'American Comics', 'Manga'];
+const comicLabels = ['Indian Comics', 'American Comics', 'Manga'];
+
 
   useEffect(() => {
     if (theme === 'dark') {
@@ -146,28 +147,33 @@ function Navigation() {
     setMobileCatalogDropdownOpen(prevState => !prevState);
     console.log(`Toggling mobile dropdown state to ${!mobileCatalogDropdownOpen}`);
   };
-  const handleLogout = async () => {
+const handleLogout = async () => {
   try {
-    // Call backend logout route
-    const accessToken = localStorage.getItem("accessToken");
-    await axios.post("http://localhost:4000/user/logout", {}, { 
-      withCredentials: true ,// important to clear refreshToken cookie
-      headers: {
-          Authorization: `Bearer ${accessToken}`, // 👈 send token
-        },
-    });
+    await axios.post(
+      "http://localhost:4000/user/logout",
+      {},
+      { withCredentials: true } // cookie gets sent automatically
+    );
+
     // Clear local state
     setUser(null);
     setCart([]); 
     localStorage.removeItem("Users"); 
-    localStorage.removeItem("accessToken"); // clear accessToken too
+    localStorage.removeItem("accessToken"); 
     setLogoutDropdownOpen(false);
 
     console.log("User logged out successfully.");
   } catch (err) {
     console.error("Logout failed:", err);
+    // Even if backend fails, force local cleanup
+    setUser(null);
+    setCart([]);
+    localStorage.removeItem("Users");
+    localStorage.removeItem("accessToken");
+    setLogoutDropdownOpen(false);
   }
 };
+
 
   const navItems = (
     <>
@@ -177,12 +183,12 @@ function Navigation() {
       <li>
         <div className="nav-link" onClick={handleToggleDropdown}>Catalog</div>
       </li>
-      <li>
+      {/* <li>
         <NavLink activeClassName="active" className="nav-link" exact to="/contact">Purchases</NavLink>
-      </li>
-      <li>
+      </li> */}
+      {/* <li>
         <NavLink activeClassName="active" className="nav-link" exact to="/about">About</NavLink>
-      </li>
+      </li> */}
     </>
   );
 
@@ -282,75 +288,76 @@ function Navigation() {
                   Catalog
                 </div>
                 {catalogDropdownOpen && (
-                  <ul className="menu bg-black bg-opacity-90 h-[550px] text-white dropdown-content z-[1] p-2 shadow rounded-box w-[900px] mt-4 mx-5 mb-5">
-                    <div className='flex flex-wrap w-full'>
-                      <div className="w-1/3 p-2">
-                        <h1 className="font-bold text-lg mb-2 text-center">Fiction</h1>
-                        <hr />
-                        <
-ul className="list-none grid grid-cols-2 lg:grid-cols-1">
-                          {fictionCategories.map((category, index) => (
-                            <li key={category} className="w-full text-sm p-1">
-                              <NavLink
-                                exact
-                                to={`/library/${category}`}
-                                className="btn text-md font-light bg-transparent border-none mx-auto"
-                                style={{ color: 'white' }}
-                              >
-                                {fictionLabels[index]}
-                              </NavLink>
-                            </li>
-                          ))}
-                        </ul>
-                      </div>
-                      <div className="w-full lg:w-1/3 p-2">
-                        <h1 className="font-bold text-lg mb-2 text-center">Non-Fiction</h1>
-                        <hr />
-                        <ul className="list-none grid grid-cols-2 lg:grid-cols-1">
-                          {nonFictionCategories.map((category, index) => (
-                            <li key={category} className="w-full text-sm p-1">
-                              <NavLink
-                                exact
-                                to={`/library/${category}`}
-                                className="btn text-md bg-transparent border-none mx-auto"
-                                style={{ color: 'white' }}
-                              >
-                                {nonFictionLabels[index]}
-                              </NavLink>
-                            </li>
-                          ))}
-                        </ul>
-                      </div>
-                      <div className="w-full lg:w-1/3 p-2">
-                        <h1 className="font-bold text-lg mb-2 text-center">Comics & Manga</h1>
-                        <hr />
-                        <ul className="list-none grid grid-cols-2 lg:grid-cols-1">
-                          {comicCategories.map((category, index) => (
-                            <li key={category} className="w-full text-sm p-1">
-                              <NavLink
-                                exact
-                                to={`/library/${category}`}
-                                className="btn text-md bg-transparent border-none mx-auto"
-                                style={{ color: 'white' }}
-                              >
-                                {comicLabels[index]}
-                              </NavLink>
-                            </li>
-                          ))}
-                        </ul>
-                      </div>
-                    </div>
-                  </ul>
-                )}
+  <div className="menu bg-black bg-opacity-90 max-h-[550px] overflow-y-auto text-white dropdown-content z-[1] p-2 shadow rounded-box w-[900px] mt-4 mx-5 mb-5">
+
+    <div className='flex flex-wrap w-full'>
+      <div className="w-1/3 p-2">
+        <h1 className="font-bold text-lg mb-2 text-center">Fiction</h1>
+        <hr />
+        <ul className="list-none grid grid-cols-2 lg:grid-cols-1">
+          {fictionCategories.map((category, index) => (
+            <li key={category} className="w-full text-sm p-1">
+              <NavLink
+                exact
+                to={`/library/${category}`}
+                className="btn text-md font-light bg-transparent border-none mx-auto"
+                style={{ color: 'white' }}
+              >
+                {fictionLabels[index]}
+              </NavLink>
+            </li>
+          ))}
+        </ul>
+      </div>
+      <div className="w-1/3 p-2">
+        <h1 className="font-bold text-lg mb-2 text-center">Non-Fiction</h1>
+        <hr />
+        <ul className="list-none grid grid-cols-2 lg:grid-cols-1">
+          {nonFictionCategories.map((category, index) => (
+            <li key={category} className="w-full text-sm p-1">
+              <NavLink
+                exact
+                to={`/library/${category}`}
+                className="btn text-md bg-transparent border-none mx-auto"
+                style={{ color: 'white' }}
+              >
+                {nonFictionLabels[index]}
+              </NavLink>
+            </li>
+          ))}
+        </ul>
+      </div>
+      <div className="w-1/3 p-2">
+        <h1 className="font-bold text-lg mb-2 text-center">Comics & Manga</h1>
+        <hr />
+        <ul className="list-none grid grid-cols-2 lg:grid-cols-1">
+          {comicCategories.map((category, index) => (
+            <li key={category} className="w-full text-sm p-1">
+              <NavLink
+                exact
+                to={`/library/${category}`}
+                className="btn text-md bg-transparent border-none mx-auto"
+                style={{ color: 'white' }}
+              >
+                {comicLabels[index]}
+              </NavLink>
+            </li>
+          ))}
+        </ul>
+      </div>
+    </div>
+  </div>
+)}
+
               </div>
-              <div>
+              {/* <div>
                 {user && user.fullname ? (
 <NavLink exact to="/purchases" className="nav-link btn btn-ghost dark:text-white rounded-btn">Purchases</NavLink>
       ) : (
         <NavLink exact to="/purchases" className="nav-link btn btn-ghost dark:text-white rounded-btn" activeClassName="active" onClick={() => document.getElementById("my_modal_3").showModal()}>Purchases</NavLink>
         
       )}
-    </div>
+    </div> */}
               
             </div>
             <div className='mt-3 mx-2'>

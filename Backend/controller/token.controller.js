@@ -56,40 +56,30 @@ export const refreshAccessToken = async (req, res) => {
 export const logout = async (req, res) => {
   try {
     const refreshToken = req.cookies.refreshToken;
-    console.log("Logout",refreshToken);
-    
+
     if (!refreshToken) {
-      return res.status(400).json({ message: "Refresh Token required" });
-    }
-    // console.log("Before log out", refreshToken);
-    
-
-    const userId = req.user?.id;
-    if (!userId) {
-      return res.status(401).json({ message: "Unauthorized" });
+      // No cookie found, just return success (idempotent)
+      return res.json({ message: "Already logged out" });
     }
 
-    const user = await User.findById(userId).select("+refreshTokens");
-    if (!user) {
-      return res.status(404).json({ message: "User not found" });
+    // Try to remove refresh token from user, if any
+    const user = await User.findOne({ refreshTokens: refreshToken }).select("+refreshTokens");
+    if (user) {
+      user.refreshTokens = user.refreshTokens.filter((t) => t !== refreshToken);
+      await user.save();
     }
 
-    const before = user.refreshTokens.length;
-    user.refreshTokens = user.refreshTokens.filter((t) => t !== refreshToken);
-    await user.save();
-
-    // Clear the cookie
-    res.clearCookie("refreshToken");
-    console.log("Refresh after logout", user.refreshTokens);
-    
-
-    return res.json({
-      message:
-        before !== user.refreshTokens.length
-          ? "Logged Out Successfully"
-          : "Session already closed",
+    // Clear the cookie regardless
+    res.clearCookie("refreshToken", {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === "production",
+      sameSite: "strict",
     });
+
+    return res.json({ message: "Logged out successfully" });
   } catch (err) {
+    console.error("Logout error:", err);
     return res.status(500).json({ message: "Internal Server Error" });
   }
 };
+

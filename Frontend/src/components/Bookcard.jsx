@@ -84,10 +84,10 @@ function sanitizeBookForCart(item, userId) {
         </figure>
         <div className="card-body p-4 flex flex-col justify-between flex-grow">
           <div>
-            <div className="text-xl font-semibold mb-2">
+            <div className="text-xl font-semibold mb-2 truncate">
               {item.volumeInfo.title}
             </div>
-            <div className="text-sm text-purple-600 mb-2">
+            <div className="text-sm text-purple-600 mb-2 truncate">
               by {item.volumeInfo.authors?.join(', ')}
             </div>
           </div>
